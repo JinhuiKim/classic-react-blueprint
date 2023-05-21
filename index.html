@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css"
+    />
+    <style>
+      body {
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+      }
+      .hide {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const selectOptions = [
+      { value: "", text: "👉🏻 Select operation" },
+      { value: "+", text: "+" },
+      { value: "-", text: "-" },
+      { value: "/", text: "/" },
+      { value: "*", text: "*" }
+    ];
+
+    function App() {
+      const [one, setOne] = React.useState("");
+      const [another, setAnother] = React.useState("");
+      const [select, setSelect] = React.useState("");
+      const [result, setResult] = React.useState("");
+      const [isActive, setIsActive] = React.useState(false);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+
+        switch (select) {
+          case "+":
+            setResult(one + another);
+            break;
+          case "-":
+            setResult(one - another);
+            break;
+          case "/":
+            setResult(one / another);
+            break;
+          case "*":
+            setResult(one * another);
+            break;
+          default:
+            break;
+        }
+
+        setIsActive(true);
+      };
+
+      const handleChangeInput = (e) => {
+        const { id, value } = e.target;
+        const num = Number(value);
+        switch (id) {
+          case "one":
+            setOne(num);
+            break;
+          case "another":
+            setAnother(num);
+            break;
+          default:
+            break;
+        }
+      };
+
+      const handleChangeSelect = (e) => {
+        const { value } = e.target;
+        setSelect(value);
+      };
+
+      return (
+        <div className="container">
+          <h1>🔥 Calculator 🔥</h1>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="number"
+              id="one"
+              name="one"
+              placeholder="👉🏻 What a number..."
+              value={one}
+              onChange={handleChangeInput}
+              required
+              autoFocus
+            />
+            <input
+              type="number"
+              id="another"
+              name="another"
+              placeholder="👉🏻 And another one..."
+              value={another}
+              onChange={handleChangeInput}
+              required
+            />
+            <select
+              name="operation"
+              id="operation"
+              required
+              onChange={handleChangeSelect}
+              value={select}
+            >
+              {selectOptions.map((v) => (
+                <option key={v.value} value={v.value}>
+                  {v.text}
+                </option>
+              ))}
+            </select>
+            <button type="submit">Calculate</button>
+          </form>
+          <h1 className={isActive ? "" : "hide"}>The result is: {result}</h1>
+        </div>
+      );
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
